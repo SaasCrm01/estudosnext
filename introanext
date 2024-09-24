@@ -1,0 +1,297 @@
+// Objetos e Funções
+// 
+// A função descricao() está utilizando crases (template literals), mas dentro do template literal você está usando aspas simples ('). Para funcionar corretamente, você precisa usar crase para envolver a string completa.
+// Aqui está o seu código corrigido:
+
+// javascript
+
+// const livro = {
+//   titulo: "Senhor dos Anéis",
+//   autor: "J.R.R. Tolkien",
+//   ano: 1954, // Deve ser um número, não uma string
+//   descricao: function() {
+//     return `Olá, o título do livro é ${this.titulo} e o autor do livro é ${this.autor}.`;
+//   }
+// };
+
+// console.log(livro.descricao());
+
+// Explicação:
+// O ano deve ser um número porque estamos lidando com datas, e o tipo correto seria number.
+// Para interpolar valores dentro de strings em JavaScript, você usa template literals (crases `) em vez de aspas simples '. As variáveis dentro da string devem ser referenciadas com ${}.
+
+
+
+//Arrays e Funções
+// Para somar os valores de um array, você pode usar o método .reduce().
+// 
+
+// javascript
+
+// function mediaNotas(notas) {
+//   const soma = notas.reduce((acumulador, nota) => acumulador + nota, 0);
+//   return soma / notas.length;
+// }
+
+// console.log(mediaNotas([10, 8, 7, 9])); // 8.5
+// Explicação:
+
+// .reduce() é um método usado para somar todos os valores dentro de um array. Ele recebe uma função que acumula a soma dos elementos e um valor inicial (no caso, 0).
+// A média é calculada dividindo a soma das notas pelo número total de elementos no array (notas.length).
+
+
+
+
+//JavaScript, Express.js, e React.
+
+// Parte 1: JavaScript
+// Promises e Async/Await
+// O enunciado pede para usar async/await e Promises. Vamos corrigir e explicar como implementar corretamente.
+
+// javascript
+
+// function obterUsuario() {
+//   return new Promise((resolve) => {
+//     setTimeout(() => {
+//       resolve({ nome: "Maria", idade: 30 });
+//     }, 2000);
+//   });
+// }
+
+// // Usar async/await para obter o usuário e imprimir o nome na console
+// async function mostrarUsuario() {
+//   try {
+//     const usuario = await obterUsuario(); // Aguarda a promise ser resolvida
+//     console.log(usuario.nome); // Imprime o nome do usuário
+//   } catch (error) {
+//     console.log("Erro ao obter o usuário:", error); // Em caso de erro
+//   }
+// }
+
+// mostrarUsuario();
+// Explicação:
+
+// await espera que a Promise seja resolvida e depois continua a execução.
+// A função mostrarUsuario foi declarada como async, que permite o uso de await dentro dela.
+// O bloco try/catch lida com qualquer erro que possa ocorrer durante a obtenção do usuário.
+
+
+// Questão 4: Arrow Functions
+// O enunciado pede para reescrever uma função usando Arrow Functions. Vamos fazer isso:
+
+// Função original:
+
+// javascript
+
+// function saudacao(nome) {
+//   return "Olá, " + nome;
+// }
+
+// Resposta:
+// javascript
+
+// const saudacao = (nome) => `Olá, ${nome}`;
+
+// console.log(saudacao("João")); // "Olá, João"
+// Explicação:
+
+// Usamos a sintaxe de Arrow Function, onde (nome) são os parâmetros, e a função retorna diretamente a string interpolada.
+// Não precisamos da palavra return nem das chaves {} quando temos apenas uma expressão retornada.
+
+
+// Parte 2: Express.js
+// Questão 5: API Básica com Express.js
+// Aqui está um exemplo de como implementar as rotas solicitadas usando Express.js:
+
+// javascript
+
+// const express = require('express');
+// const app = express();
+// app.use(express.json());
+
+// let produtos = [];
+
+// // GET - Retorna todos os produtos
+// app.get('/produtos', (req, res) => {
+//   res.json(produtos);
+// });
+
+// // POST - Adiciona um novo produto
+// app.post('/produtos', (req, res) => {
+//   const novoProduto = req.body;
+//   produtos.push(novoProduto);
+//   res.status(201).json(novoProduto);
+// });
+
+// // PUT - Atualiza um produto pelo id
+// app.put('/produtos/:id', (req, res) => {
+//   const { id } = req.params;
+//   const { nome, preco } = req.body;
+//   const produto = produtos.find(p => p.id === parseInt(id));
+
+//   if (produto) {
+//     produto.nome = nome;
+//     produto.preco = preco;
+//     res.json(produto);
+//   } else {
+//     res.status(404).send('Produto não encontrado');
+//   }
+// });
+
+// // DELETE - Remove um produto pelo id
+// app.delete('/produtos/:id', (req, res) => {
+//   const { id } = req.params;
+//   const index = produtos.findIndex(p => p.id === parseInt(id));
+
+//   if (index !== -1) {
+//     produtos.splice(index, 1);
+//     res.send('Produto removido');
+//   } else {
+//     res.status(404).send('Produto não encontrado');
+//   }
+// });
+
+// app.listen(3000, () => {
+//   console.log('Servidor rodando na porta 3000');
+// });
+// Explicação:
+
+// Usei um array produtos global para armazenar os dados de produtos em memória.
+// Cada rota implementa um método HTTP (GET, POST, PUT, DELETE).
+// O método PUT e DELETE usam o parâmetro id na URL para identificar qual produto será atualizado ou deletado.
+// Questão 6: Integração com MongoDB
+// Aqui está um exemplo básico de como fazer integração com MongoDB usando Express.js:
+
+// javascript
+// Copiar código
+// const express = require('express');
+// const { MongoClient } = require('mongodb');
+// const app = express();
+// app.use(express.json());
+
+// const url = 'mongodb://localhost:27017';
+// const client = new MongoClient(url);
+// const dbName = 'minhaLoja';
+
+// async function conectarDB() {
+//   await client.connect();
+//   console.log('Conectado ao MongoDB');
+//   const db = client.db(dbName);
+//   return db.collection('usuarios');
+// }
+
+// // POST - Adiciona um novo usuário
+// app.post('/usuarios', async (req, res) => {
+//   const usuariosCollection = await conectarDB();
+//   const resultado = await usuariosCollection.insertOne(req.body);
+//   res.status(201).send(`Usuário criado com ID: ${resultado.insertedId}`);
+// });
+
+// app.listen(3000, () => {
+//   console.log('Servidor rodando na porta 3000');
+// });
+// Explicação:
+
+// Usamos o pacote mongodb para conectar ao banco MongoDB.
+// A função conectarDB() abre uma conexão com o banco e retorna a coleção usuarios.
+// O método insertOne insere o documento enviado no corpo da requisição no banco de dados.
+// Parte 3: React
+// Questão 7: Componentes e Props
+// Aqui está um exemplo de como criar o componente Produto usando props:
+
+// javascript
+// Copiar código
+// function Produto({ nome, preco }) {
+//   return (
+//     <div>
+//       <h2>{nome}</h2>
+//       <p>Preço: R${preco}</p>
+//     </div>
+//   );
+// }
+
+// // Uso do componente Produto
+// function App() {
+//   return <Produto nome="Smartphone" preco={2500} />;
+// }
+
+// export default App;
+// Explicação:
+
+// O componente Produto recebe nome e preco como props.
+// Exibimos esses valores em elementos JSX (<h2> e <p>).
+// Questão 8: Estados e Eventos
+// Aqui está a implementação do componente Contador com estado e eventos:
+
+// javascript
+// Copiar código
+// import { useState } from 'react';
+
+// function Contador() {
+//   const [contador, setContador] = useState(0);
+
+//   return (
+//     <div>
+//       <p>Contador: {contador}</p>
+//       <button onClick={() => setContador(contador + 1)}>Incrementar</button>
+//       <button onClick={() => setContador(contador - 1)}>Decrementar</button>
+//     </div>
+//   );
+// }
+
+// export default Contador;
+// Explicação:
+
+// O estado contador é inicializado com 0 e atualizado pelos botões.
+// Usamos o hook useState para gerenciar o estado do componente.
+// Questão 9: Renderização Condicional
+// Aqui está o código do componente StatusLogin com renderização condicional:
+
+// javascript
+// Copiar código
+// function StatusLogin({ estaLogado }) {
+//   return (
+//     <div>
+//       {estaLogado ? <h1>Você está logado</h1> : <h1>Por favor, faça login</h1>}
+//     </div>
+//   );
+// }
+
+// export default StatusLogin;
+// Explicação:
+
+// A expressão condicional (ternário) decide se exibe "Você está logado" ou "Por favor, faça login" com base na prop estaLogado.
+// Questão 10: Formulários em React
+// Aqui está a implementação do componente FormularioCadastro:
+
+// javascript
+// Copiar código
+// import { useState } from 'react';
+
+// function FormularioCadastro() {
+//   const [nome, setNome] = useState('');
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     alert(`Nome enviado: ${nome}`);
+//   };
+
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       <label>
+//         Nome:
+//         <input
+//           type="text"
+//           value={nome}
+//           onChange={(e) => setNome(e.target.value)}
+//         />
+//       </label>
+//       <button type="submit">Enviar</button>
+//     </form>
+//   );
+// }
+
+// export default FormularioCadastro;
+// Explicação:
+
+// O estado nome é atualizado toda vez que o input muda, e ao enviar o formulário, mostramos o nome em um alert.
